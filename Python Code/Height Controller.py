@@ -56,7 +56,7 @@ def sendCommand(heightChange, motorID):
         direction = 'D'
 
     # determine number of rotations
-    rotations = abs(heightChange) / 0.635
+    rotations = abs(heightChange) / 0.025
 
     # write command string
     command = '(' + motorID + ', ' + direction + ', ' + str(rotations) + ')'
@@ -100,7 +100,25 @@ def sendCommandB():
     heightTrackerB += heightChange
     currentHeightB.set(f"{heightTrackerB:.2f}")
 
-
+def zeroA():
+    # --- Function Description ---
+    # Runs when the "Zero A" button is pressed
+    # Resets the height tracker for motor A to zero, does not send commands to arduino
+    
+    global heightTrackerA
+    
+    heightTrackerA = 0
+    currentHeightA.set(f"{heightTrackerA:.2f}")
+    
+def zeroB():
+    # --- Function Description ---
+    # Runs when the "Zero B" button is pressed
+    # Resets the height tracker for motor B to zero, does not send commands to arduino
+    
+    global heightTrackerB
+    
+    heightTrackerB = 0
+    currentHeightB.set(f"{heightTrackerB:.2f}")
 
 #%% Body
 #%%% Create GUI
@@ -119,8 +137,8 @@ ttk.Button(mainframe, text="Connect Arduino", command=connectArduino).grid(colum
 
 # text labels
 ttk.Label(mainframe, text="Motor ID").grid(column=1, row=2, sticky=S)
-ttk.Label(mainframe, text="Current Height Difference (mm)").grid(column=2, row=2)
-ttk.Label(mainframe, text="Height Increase/Decrease (mm)").grid(column=3, row=2)
+ttk.Label(mainframe, text="Current Height Difference (in)").grid(column=2, row=2)
+ttk.Label(mainframe, text="Height Increase/Decrease (in)").grid(column=3, row=2)
 ttk.Label(mainframe, text="A").grid(column=1, row=3)
 ttk.Label(mainframe, text="B").grid(column=1, row=4)
 
@@ -132,18 +150,18 @@ ttk.Spinbox(mainframe, from_= -100.0, to= 100.0, textvariable = spinval_B, incre
 
 #Height Difference trackers
 currentHeightA = StringVar()
-currentHeightLabelA = ttk.Label(mainframe, textvariable=currentHeightA).grid(column=2, row=6)
+currentHeightLabelA = ttk.Label(mainframe, textvariable=currentHeightA).grid(column=2, row=3)
 
 currentHeightB = StringVar()
-currentHeightLabelB = ttk.Label(mainframe, textvariable=currentHeightB).grid(column=3, row=6)
+currentHeightLabelB = ttk.Label(mainframe, textvariable=currentHeightB).grid(column=2, row=4)
 
 # 'send command' buttons
 ttk.Button(mainframe, text="Send Command", command=sendCommandA).grid(column=4, row=3)
 ttk.Button(mainframe, text="Send Command", command=sendCommandB).grid(column=4, row=4)
 
 # 'zero' buttons
-ttk.Button(mainframe,text="zero A").grid(column=1, row=5) 
-ttk.Button(mainframe,text="zero B").grid(column=2, row=5)
+ttk.Button(mainframe,text="zero A", command=zeroA).grid(column=1, row=5) 
+ttk.Button(mainframe,text="zero B", command=zeroB).grid(column=2, row=5)
 
 # Run the GUI main loop
 root.mainloop()
